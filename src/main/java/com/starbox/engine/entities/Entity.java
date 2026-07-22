@@ -13,8 +13,8 @@ public abstract class Entity {
     protected double y;
     protected double velocityX;
     protected double velocityY;
-    protected final int width;
-    protected final int height;
+    protected int width;
+    protected int height;
     protected Color color;
     protected boolean alive = true;
 

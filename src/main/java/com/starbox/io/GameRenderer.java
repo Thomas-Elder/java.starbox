@@ -4,6 +4,7 @@ import com.starbox.GameConstants;
 import com.starbox.engine.GameEngine;
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.Enemy;
+import com.starbox.engine.entities.Explosion;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
 
@@ -40,6 +41,10 @@ public final class GameRenderer {
         }
         for (Enemy enemy : engine.getEnemies()) {
             enemy.render(g);
+        }
+
+        for (Explosion explosion: engine.getExplosions()){
+            explosion.render(g);
         }
 
         // Player

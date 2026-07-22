@@ -6,6 +6,7 @@ import com.starbox.engine.entities.Player;
 
 import java.util.List;
 
+
 /**
  * Resolves collisions between bullets, enemies, and the player for a
  * single tick. Pulled out of GameEngine so collision rules can be read,
@@ -14,6 +15,8 @@ import java.util.List;
 public final class CollisionSystem {
 
     private static final int ENEMY_CONTACT_DAMAGE = 34;
+
+
 
     private CollisionSystem() {
         // no instances
@@ -25,7 +28,9 @@ public final class CollisionSystem {
      *
      * @return the score gained from any enemies destroyed this tick
      */
-    public static int resolve(Player player, List<Bullet> bullets, List<Enemy> enemies) {
+    public static CollisionResult resolve(Player player, List<Bullet> bullets, List<Enemy> enemies) {
+        var collisionResult = new CollisionResult();
+
         int scoreGained = 0;
 
         // Player bullets vs enemies
@@ -41,6 +46,7 @@ public final class CollisionSystem {
                     bullet.kill();
                     enemy.kill();
                     scoreGained += enemy.getScoreValue();
+                    collisionResult.coords.add(new Coord(enemy.getX(), enemy.getY()));
                     break;
                 }
             }
@@ -53,10 +59,13 @@ public final class CollisionSystem {
             }
             if (enemy.getBounds().intersects(player.getBounds())) {
                 enemy.kill();
+                collisionResult.coords.add(new Coord(enemy.getX(), enemy.getY()));
                 player.damage(ENEMY_CONTACT_DAMAGE);
             }
         }
 
-        return scoreGained;
+        collisionResult.points = scoreGained;
+        collisionResult.collision = !collisionResult.coords.isEmpty();
+        return collisionResult;
     }
 }

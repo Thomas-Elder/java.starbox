@@ -3,6 +3,7 @@ package com.starbox.engine;
 import com.starbox.GameConstants;
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.Enemy;
+import com.starbox.engine.entities.Explosion;
 import com.starbox.engine.entities.Player;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
@@ -25,6 +26,7 @@ public class GameEngine {
     private final Player player;
     private final List<Bullet> bullets = new ArrayList<>();
     private final List<Enemy> enemies = new ArrayList<>();
+    private final List<Explosion> explosions = new ArrayList<>();
     private final Random random = new Random();
 
     private Starfield starfield;
@@ -97,7 +99,18 @@ public class GameEngine {
             enemy.update(dt);
         }
 
-        score += CollisionSystem.resolve(player, bullets, enemies);
+        var collisionResult = CollisionSystem.resolve(player, bullets, enemies);
+        if (collisionResult.collision) {
+            score += collisionResult.points;
+            for (Coord coords : collisionResult.coords) {
+                explosions.add(new Explosion(coords.x, coords.y));
+            }
+        }
+
+        for (Explosion explosion : explosions){
+            explosion.update(dt);
+        }
+
         removeOffscreenAndDead();
 
         if (!player.isAlive()) {
@@ -174,6 +187,7 @@ public class GameEngine {
     private void removeOffscreenAndDead() {
         bullets.removeIf(b -> !b.isAlive() || b.getY() < -20 || b.getY() > GameConstants.WINDOW_HEIGHT + 20);
         enemies.removeIf(e -> !e.isAlive() || e.getY() > GameConstants.WINDOW_HEIGHT + 40);
+        explosions.removeIf(e -> !e.isAlive());
     }
 
     // ------------------------------------------------------------------
@@ -194,6 +208,10 @@ public class GameEngine {
 
     public List<Enemy> getEnemies() {
         return Collections.unmodifiableList(enemies);
+    }
+
+    public List<Explosion> getExplosions() {
+        return Collections.unmodifiableList(explosions);
     }
 
     public Starfield getStarfield() {
