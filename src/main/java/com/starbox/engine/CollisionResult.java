@@ -1,10 +1,7 @@
 package com.starbox.engine;
 
-import java.util.ArrayList;
+import com.starbox.engine.entities.Explosion;
+
 import java.util.List;
 
-public class CollisionResult {
-    public boolean collision;
-    public List<Coord> coords = new ArrayList<>();
-    public int points;
-}
+public record CollisionResult (int scoreGained, List<Explosion> explosions) {}

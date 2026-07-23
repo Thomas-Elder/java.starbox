@@ -100,12 +100,10 @@ public class GameEngine {
         }
 
         var collisionResult = CollisionSystem.resolve(player, bullets, enemies);
-        if (collisionResult.collision) {
-            score += collisionResult.points;
-            for (Coord coords : collisionResult.coords) {
-                explosions.add(new Explosion(coords.x, coords.y));
-            }
-        }
+
+        score += collisionResult.scoreGained();
+        explosions.addAll(collisionResult.explosions());
+
 
         for (Explosion explosion : explosions){
             explosion.update(dt);

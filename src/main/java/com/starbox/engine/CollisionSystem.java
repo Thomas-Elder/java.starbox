@@ -2,8 +2,10 @@ package com.starbox.engine;
 
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.Enemy;
+import com.starbox.engine.entities.Explosion;
 import com.starbox.engine.entities.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,9 +31,9 @@ public final class CollisionSystem {
      * @return the score gained from any enemies destroyed this tick
      */
     public static CollisionResult resolve(Player player, List<Bullet> bullets, List<Enemy> enemies) {
-        var collisionResult = new CollisionResult();
 
         int scoreGained = 0;
+        var explosions = new ArrayList<Explosion>();
 
         // Player bullets vs enemies
         for (Bullet bullet : bullets) {
@@ -46,7 +48,9 @@ public final class CollisionSystem {
                     bullet.kill();
                     enemy.kill();
                     scoreGained += enemy.getScoreValue();
-                    collisionResult.coords.add(new Coord(enemy.getX(), enemy.getY()));
+                    explosions.add(Explosion.centeredAt(
+                            enemy.getX() + enemy.getWidth() / 2.0,
+                            enemy.getY() + enemy.getHeight() / 2.0));
                     break;
                 }
             }
@@ -59,13 +63,13 @@ public final class CollisionSystem {
             }
             if (enemy.getBounds().intersects(player.getBounds())) {
                 enemy.kill();
-                collisionResult.coords.add(new Coord(enemy.getX(), enemy.getY()));
+                explosions.add(Explosion.centeredAt(
+                        enemy.getX() + enemy.getWidth() / 2.0,
+                        enemy.getY() + enemy.getHeight() / 2.0));
                 player.damage(ENEMY_CONTACT_DAMAGE);
             }
         }
 
-        collisionResult.points = scoreGained;
-        collisionResult.collision = !collisionResult.coords.isEmpty();
-        return collisionResult;
+        return new CollisionResult(scoreGained, explosions);
     }
 }
