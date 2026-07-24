@@ -12,7 +12,7 @@ public class Enemy extends Entity {
     private final double wiggleFrequency;
 
     public Enemy(double x, double y, EnemyType type) {
-        super(x, y, type.getSize(), type.getSize(), Color.RED);
+        super(x, y, type.getSize(), type.getSize(), type.getColor());
         this.type = type;
         this.hp = type.getHp();
         this.velocityY = type.getSpeed();
