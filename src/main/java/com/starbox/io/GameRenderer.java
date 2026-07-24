@@ -2,11 +2,13 @@ package com.starbox.io;
 
 import com.starbox.GameConstants;
 import com.starbox.engine.GameEngine;
+import com.starbox.engine.entities.Boss;
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.Enemy;
 import com.starbox.engine.entities.Explosion;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
+import com.starbox.engine.levels.LevelType;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -71,6 +73,7 @@ public final class GameRenderer {
      */
     private static void drawHud(Graphics2D g, GameEngine engine) {
         LevelManager levelManager = engine.getLevelManager();
+        Level level = levelManager.current();
 
         g.setColor(Color.WHITE);
         g.setFont(new Font("Monospaced", Font.BOLD, 14));
@@ -78,7 +81,9 @@ public final class GameRenderer {
         g.drawString("Health: " + engine.getPlayer().getHealth(), 10, 38);
         g.drawString("Lives: " + engine.getPlayer().getLives(), 10, 56);
 
-        String levelLabel = "Level " + levelManager.levelNumber() + "/" + levelManager.totalLevels();
+        String levelLabel = level.levelType() == LevelType.BOSS
+                ? "BOSS FIGHT"
+                : "Level " + levelManager.levelNumber() + "/" + levelManager.totalLevels();
         int labelWidth = g.getFontMetrics().stringWidth(levelLabel);
         g.drawString(levelLabel, GameConstants.WINDOW_WIDTH - labelWidth - 10, 20);
 
@@ -88,11 +93,23 @@ public final class GameRenderer {
         int barWidth = GameConstants.WINDOW_WIDTH - 20;
         int barHeight = 6;
 
+        double fraction;
+        Color fillColor;
+
+        if (level.levelType() == LevelType.BOSS) {
+            Boss boss = engine.getBoss();
+            fraction = (boss != null) ? (double) boss.getHealth() / boss.getMaxHealth() : 0;
+            fillColor = new Color(255, 60, 60, 220);
+        } else {
+            fraction = levelManager.progress();
+            fillColor = new Color(255, 255, 255, 180);
+        }
+
         g.setColor(new Color(255, 255, 255, 60));
         g.fillRect(barX, barY, barWidth, barHeight);
 
-        g.setColor(new Color(255, 255, 255, 180));
-        int filledWidth = (int) (barWidth * levelManager.progress());
+        g.setColor(fillColor);
+        int filledWidth = (int) (barWidth * fraction);
         g.fillRect(barX, barY, filledWidth, barHeight);
     }
 
