@@ -48,7 +48,7 @@ public class LevelManager {
     /**
      * Returns a double that represents the progress through the current level's duration,
      * a number from 0.0-1.0.
-     * @return
+     * @return current level progress value
      */
     public double progress() {
         return Math.min(1.0, elapsedSeconds / current().durationSeconds());

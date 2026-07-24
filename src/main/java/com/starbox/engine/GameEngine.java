@@ -168,6 +168,12 @@ public class GameEngine {
         List<SpawnEntry> schedule = levelManager.current().spawnSchedule();
         double elapsedSeconds = levelManager.getElapsedSeconds();
 
+        // While there are more enemies to spawn in the schedule, and the next Enemy to spawn is prior to
+        // the elapsed time.
+        // So if the next spawn is due at 5 seconds, but elapsed time is 4.5, we skip the loop
+        // Once elapsed time increase to 5.1, we go into the loop.
+        // It's a loop incase multiple spawns are scheduled at the same time and need to be
+        // instantiated in the same tick.
         while (spawnIndex < schedule.size() && schedule.get(spawnIndex).atSeconds() <= elapsedSeconds) {
             EnemyType type = schedule.get(spawnIndex).type();
             double x = random.nextDouble() * (GameConstants.WINDOW_WIDTH - type.getSize());
