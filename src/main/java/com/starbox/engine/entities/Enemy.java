@@ -1,20 +1,18 @@
 package com.starbox.engine.entities;
 
-import java.awt.Color;
-
 public class Enemy extends Entity {
 
-    private final EnemyType type;
-    private double age = 0;
-    private int hp;
-    private final double baseX;
-    private final double wiggleAmplitude;
-    private final double wiggleFrequency;
+    protected final EnemyType type;
+    protected double age = 0;
+    protected int health;
+    protected final double baseX;
+    protected final double wiggleAmplitude;
+    protected final double wiggleFrequency;
 
     public Enemy(double x, double y, EnemyType type) {
         super(x, y, type.getSize(), type.getSize(), type.getColor());
         this.type = type;
-        this.hp = type.getHp();
+        this.health = type.getStartingHealth();
         this.velocityY = type.getSpeed();
         this.baseX = x;
         this.wiggleAmplitude = 40 + Math.random() * 40;
@@ -28,19 +26,25 @@ public class Enemy extends Entity {
         x = baseX + Math.sin(age * wiggleFrequency) * wiggleAmplitude;
     }
 
-    public int getScoreValue() {
-        return type.getScoreValue();
-    }
+
 
     public void damage(int damage) {
-        hp -= damage;
+        health -= damage;
 
-        if (hp <= 0) {
+        if (health <= 0) {
+            health = 0;
             kill();
         }
     }
 
-    public int getDamage(){
-        return type.getDamage();
+    public boolean diesOnPlayerContact() {
+        return true;
     }
+
+    public int getMaxHealth() { return type.getStartingHealth(); }
+    public int getHealth() { return health; }
+    public int getScoreValue() {
+        return type.getScoreValue();
+    }
+    public int getDamage(){ return type.getDamage(); }
 }

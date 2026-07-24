@@ -11,15 +11,15 @@ public enum EnemyType {
     BOSS(112, 670, 20, 100, 100, Color.RED);
 
     private final int size;
-    private final int hp;
+    private final int startingHealth;
     private final double speed;
     private final int damage;
     private final int scoreValue;
     private final Color color;
 
-    EnemyType(int size, int hp, double speed, int damage, int scoreValue, Color color) {
+    EnemyType(int size, int startingHealth, double speed, int damage, int scoreValue, Color color) {
         this.size = size;
-        this.hp = hp;
+        this.startingHealth = startingHealth;
         this.speed = speed;
         this.damage = damage;
         this.scoreValue = scoreValue;
@@ -30,7 +30,7 @@ public enum EnemyType {
         return size;
     }
 
-    public int getHp() { return hp; }
+    public int getStartingHealth() { return startingHealth; }
 
     public double getSpeed() {
         return speed;
