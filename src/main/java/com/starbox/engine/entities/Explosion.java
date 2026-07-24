@@ -12,6 +12,9 @@ public class Explosion extends Entity {
     private final double centerY;
     private double progress = 0;
 
+    private final int startSize;
+    private final int endSize;
+
     /**
      * Instantiates an Explosion with x, y coordinates as the top left corner.
      * @param x x-coordinate of the top left corner of the explosion
@@ -21,6 +24,16 @@ public class Explosion extends Entity {
         super(x, y, START_SIZE, START_SIZE, Color.WHITE);
         this.centerX = x + START_SIZE / 2.0;
         this.centerY = y + START_SIZE / 2.0;
+        this.startSize = START_SIZE;
+        this.endSize = END_SIZE;
+    }
+
+    public Explosion(double x, double y, int startSize) {
+        super(x, y, startSize, startSize, Color.WHITE);
+        this.centerX = x + startSize / 2.0;
+        this.centerY = y + startSize / 2.0;
+        this.startSize = startSize;
+        this.endSize = startSize * 5;
     }
 
     /**
@@ -33,6 +46,10 @@ public class Explosion extends Entity {
         return new Explosion(centerX - START_SIZE / 2.0, centerY - START_SIZE / 2.0);
     }
 
+    public static Explosion centeredAt(double centerX, double centerY, int startSize) {
+        return new Explosion(centerX - startSize / 2.0, centerY - startSize / 2.0, startSize);
+    }
+
     /**
      *
      * @param deltaSeconds number of seconds in a tick, used to keep updates in sync.
@@ -42,7 +59,7 @@ public class Explosion extends Entity {
 
         progress = Math.min(1.0, progress + deltaSeconds / DURATION_SECONDS);
 
-        width = (int) lerp(START_SIZE, END_SIZE, progress);
+        width = (int) lerp(startSize, endSize, progress);
         height = width;
 
         x = centerX - width / 2.0;
