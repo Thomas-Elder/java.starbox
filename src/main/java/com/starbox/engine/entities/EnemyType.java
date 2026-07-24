@@ -43,8 +43,4 @@ public enum EnemyType {
     public int getScoreValue() {
         return scoreValue;
     }
-
-    public Color getColor() {
-        return color;
-    }
 }
