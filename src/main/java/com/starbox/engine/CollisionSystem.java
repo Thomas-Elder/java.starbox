@@ -42,11 +42,17 @@ public final class CollisionSystem {
                 }
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
                     bullet.kill();
-                    enemy.damage(bullet.getDamage());
-                    scoreGained += enemy.getScoreValue();
                     explosions.add(Explosion.centeredAt(
-                            enemy.getX() + enemy.getWidth() / 2.0,
-                            enemy.getY() + enemy.getHeight() / 2.0));
+                            bullet.getX() + bullet.getWidth() / 2.0,
+                            bullet.getY() + bullet.getHeight() / 2.0));
+
+                    if (enemy.damage(bullet.getDamage())) {
+                        scoreGained += enemy.getScoreValue();
+                        explosions.add(Explosion.centeredAt(
+                                enemy.getX() + enemy.getWidth() / 2.0,
+                                enemy.getY() + enemy.getHeight() / 2.0,
+                                        enemy.getWidth()));
+                    }
                     break;
                 }
             }
