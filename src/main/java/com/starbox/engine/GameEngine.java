@@ -4,6 +4,7 @@ import com.starbox.GameConstants;
 import com.starbox.engine.entities.*;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
+import com.starbox.engine.levels.LevelType;
 import com.starbox.engine.levels.Levels;
 import com.starbox.io.InputHandler;
 
@@ -29,9 +30,9 @@ public class GameEngine {
     private Starfield starfield;
     private GameState state = GameState.LEVEL_INTRO;
     private double stateTimer = 0;
-
     private int spawnIndex = 0;
     private int score = 0;
+    private Boss boss;
 
     public GameEngine() {
         Level firstLevel = levelManager.current();
@@ -72,6 +73,8 @@ public class GameEngine {
     }
 
     private void updatePlaying(double dt, InputHandler input) {
+        Level level = levelManager.current();
+
         player.move(dt, input.isUpPressed(), input.isDownPressed(),
                 input.isLeftPressed(), input.isRightPressed(),
                 GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
@@ -86,7 +89,11 @@ public class GameEngine {
             player.resetShootTimer();
         }
 
-        spawnScheduledEnemies();
+        if (level.levelType() == LevelType.BOSS) {
+            spawnBossIfNeeded(level);
+        } else {
+            spawnScheduledEnemies();
+        }
 
         for (Bullet bullet : bullets) {
             bullet.update(dt);
@@ -100,7 +107,6 @@ public class GameEngine {
         score += collisionResult.scoreGained();
         explosions.addAll(collisionResult.explosions());
 
-
         for (Explosion explosion : explosions){
             explosion.update(dt);
         }
@@ -113,10 +119,19 @@ public class GameEngine {
             return;
         }
 
-        levelManager.tick(dt);
-        if (levelManager.isComplete()) {
+        // If it's a boss level, and a not null boss is dead, complete the level
+        boolean levelComplete;
+        if (level.levelType() == LevelType.BOSS) {
+            levelComplete = boss != null && !boss.isAlive();
+        } else {
+            levelManager.tick(dt);
+            levelComplete = levelManager.isComplete();
+        }
+
+        if (levelComplete) {
             bullets.clear();
             enemies.clear();
+            boss = null;
             state = levelManager.isFinalLevel() ? GameState.VICTORY : GameState.LEVEL_COMPLETE;
             stateTimer = 0;
         }
@@ -143,6 +158,7 @@ public class GameEngine {
             state = GameState.LEVEL_INTRO;
             stateTimer = 0;
             spawnIndex = 0;
+            boss = null;
             return;
         }
 
@@ -163,6 +179,7 @@ public class GameEngine {
 
         state = GameState.LEVEL_INTRO;
         stateTimer = 0;
+        spawnIndex = 0;
     }
 
     private void spawnScheduledEnemies(){
@@ -181,6 +198,15 @@ public class GameEngine {
             enemies.add(new Enemy(x, -type.getSize(), type));
             spawnIndex++;
         }
+    }
+
+    private void spawnBossIfNeeded(Level level) {
+        if (boss != null) { return; }
+
+        EnemyType type = level.bossType();
+        double x = (GameConstants.WINDOW_WIDTH - type.getSize()) / 2.0;
+        boss = new Boss(x, -type.getSize(), type);
+        enemies.add(boss);
     }
 
     private void removeOffscreenAndDead() {
@@ -207,6 +233,10 @@ public class GameEngine {
 
     public List<Enemy> getEnemies() {
         return Collections.unmodifiableList(enemies);
+    }
+
+    public Boss getBoss() {
+        return boss;
     }
 
     public List<Explosion> getExplosions() {
