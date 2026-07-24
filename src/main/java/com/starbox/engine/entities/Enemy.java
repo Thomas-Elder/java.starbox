@@ -1,9 +1,23 @@
 package com.starbox.engine.entities;
 
+import com.starbox.engine.entities.firing.enemy.FiringBehavior;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class Enemy extends Entity {
+
+    private static final class FiringSlot {
+        final FiringBehavior behavior;
+        double cooldown;
+
+        FiringSlot(FiringBehavior behavior) {
+            this.behavior = behavior;
+            this.cooldown = behavior.getFireIntervalSeconds();
+        }
+    }
 
     protected final EnemyType type;
     protected double age = 0;
@@ -12,10 +26,11 @@ public class Enemy extends Entity {
     protected final double wiggleAmplitude;
     protected final double wiggleFrequency;
 
-    private double shootTimer = 0;
+    // private double shootTimer = 0;
     private double spawnTimer = 0;
     private final List<Bullet> pendingBullets = new ArrayList<>();
     private final List<Enemy> pendingSpawns = new ArrayList<>();
+    private final List<FiringSlot> firingSlots = new ArrayList<>();
 
     public Enemy(double x, double y, EnemyType type) {
         super(x, y, type.getSize(), type.getSize(), type.getColor());
@@ -25,6 +40,13 @@ public class Enemy extends Entity {
         this.baseX = x;
         this.wiggleAmplitude = 40 + Math.random() * 40;
         this.wiggleFrequency = 1.0 + Math.random();
+
+        for (FiringBehavior behavior : type.getFiringBehaviors()) {
+            firingSlots.add(new FiringSlot(behavior));
+        }
+        if (type.canSpawn()) {
+            this.spawnTimer = type.getSpawnBehavior().getSpawnIntervalSeconds();
+        }
     }
 
     @Override
@@ -35,11 +57,15 @@ public class Enemy extends Entity {
     }
 
     public void updateFiring(double dt, Player player) {
-        if (!type.canFire() || !isAlive()) return;
-        shootTimer -= dt;
-        if (shootTimer <= 0) {
-            pendingBullets.addAll(type.getFiringBehavior().createBullets(this, player));
-            shootTimer = type.getFiringBehavior().getFireIntervalSeconds();
+
+        if (!isAlive()) return;
+
+        for (FiringSlot slot : firingSlots) {
+            slot.cooldown -= dt;
+            if (slot.cooldown <= 0) {
+                pendingBullets.addAll(slot.behavior.createBullets(this, player));
+                slot.cooldown = slot.behavior.getFireIntervalSeconds();
+            }
         }
     }
 
