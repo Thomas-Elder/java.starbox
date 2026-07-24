@@ -31,11 +31,26 @@ public final class CollisionSystem {
         int scoreGained = 0;
         var explosions = new ArrayList<Explosion>();
 
-        // Player bullets vs enemies
+
         for (Bullet bullet : bullets) {
+
+            // Enemy bullets vs player
             if (bullet.getOwner() != Bullet.Owner.PLAYER || !bullet.isAlive()) {
-                continue;
+                if (bullet.getBounds().intersects(player.getBounds())) {
+                    bullet.kill();
+                    explosions.add(Explosion.centeredAt(
+                            bullet.getX() + bullet.getWidth() / 2.0,
+                            bullet.getY() + bullet.getHeight() / 2.0));
+                    if(player.damage(bullet.getDamage())) {
+                        explosions.add(Explosion.centeredAt(
+                                player.getX() + player.getWidth() / 2.0,
+                                player.getY() + player.getHeight() / 2.0,
+                                player.getWidth()));
+                    }
+                }
             }
+
+            // Player bullet vs enemies
             for (Enemy enemy : enemies) {
                 if (!enemy.isAlive()) {
                     continue;
@@ -57,6 +72,9 @@ public final class CollisionSystem {
                 }
             }
         }
+
+        // Enemy bullets vs player
+
 
         // Enemies vs player (simple contact damage)
         for (Enemy enemy : enemies) {

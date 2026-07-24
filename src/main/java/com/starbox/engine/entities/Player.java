@@ -66,8 +66,10 @@ public class Player extends Entity {
     /**
      * Applies damage. When health hits zero a life is lost and health
      * resets, unless it was the last life, in which case the player dies.
+     * @param amount the amount of damage taken
+     * @return true if this damage was lethal
      */
-    public void damage(int amount) {
+    public boolean damage(int amount) {
         health -= amount;
         if (health <= 0) {
             lives--;
@@ -76,8 +78,11 @@ public class Player extends Entity {
             } else {
                 health = 0;
                 kill();
+                return true;
             }
         }
+
+        return false;
     }
 
     public void reset(double startX, double startY) {
