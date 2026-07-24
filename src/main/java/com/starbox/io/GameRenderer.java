@@ -132,7 +132,7 @@ public final class GameRenderer {
         drawCentered(g, "LEVEL COMPLETE", GameConstants.WINDOW_HEIGHT / 2 - 20);
 
         g.setFont(new Font("Monospaced", Font.PLAIN, 16));
-        drawCentered(g, "Press SPACE to continue", GameConstants.WINDOW_HEIGHT / 2 + 10);
+        drawCentered(g, "Press E to continue", GameConstants.WINDOW_HEIGHT / 2 + 10);
     }
 
     private static void drawVictory(Graphics2D g, GameEngine engine) {
@@ -146,7 +146,7 @@ public final class GameRenderer {
         drawCentered(g, "Final Score: " + engine.getScore(), GameConstants.WINDOW_HEIGHT / 2 - 4);
 
         g.setFont(new Font("Monospaced", Font.PLAIN, 16));
-        drawCentered(g, "Press SPACE to play again", GameConstants.WINDOW_HEIGHT / 2 + 26);
+        drawCentered(g, "Press E to play again", GameConstants.WINDOW_HEIGHT / 2 + 26);
     }
 
     private static void drawGameOver(Graphics2D g) {
@@ -157,7 +157,7 @@ public final class GameRenderer {
         drawCentered(g, "GAME OVER", GameConstants.WINDOW_HEIGHT / 2 - 20);
 
         g.setFont(new Font("Monospaced", Font.PLAIN, 16));
-        drawCentered(g, "Press SPACE to restart", GameConstants.WINDOW_HEIGHT / 2 + 10);
+        drawCentered(g, "Press E to restart", GameConstants.WINDOW_HEIGHT / 2 + 10);
     }
 
     private static void dimScreen(Graphics2D g) {
