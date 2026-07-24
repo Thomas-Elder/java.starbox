@@ -28,13 +28,16 @@ public class Enemy extends Entity {
 
 
 
-    public void damage(int damage) {
+    public boolean damage(int damage) {
         health -= damage;
 
         if (health <= 0) {
             health = 0;
             kill();
+            return true;
         }
+
+        return false;
     }
 
     public boolean diesOnPlayerContact() {
