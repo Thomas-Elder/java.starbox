@@ -4,17 +4,16 @@ import java.awt.Color;
 
 public class Enemy extends Entity {
 
-    private static final int SIZE = 26;
-    private static final double SPEED = 120; // pixels per second, downward
-
+    private final EnemyType type;
     private double age = 0;
     private final double baseX;
     private final double wiggleAmplitude;
     private final double wiggleFrequency;
 
-    public Enemy(double x, double y) {
-        super(x, y, SIZE, SIZE, Color.RED);
-        this.velocityY = SPEED;
+    public Enemy(double x, double y, EnemyType type) {
+        super(x, y, type.getSize(), type.getSize(), Color.RED);
+        this.type = type;
+        this.velocityY = type.getSpeed();
         this.baseX = x;
         this.wiggleAmplitude = 40 + Math.random() * 40;
         this.wiggleFrequency = 1.0 + Math.random();
@@ -28,6 +27,10 @@ public class Enemy extends Entity {
     }
 
     public int getScoreValue() {
-        return 100;
+        return type.getScoreValue();
+    }
+
+    public int getDamage(){
+        return type.getDamage();
     }
 }

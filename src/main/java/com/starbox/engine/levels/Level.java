@@ -1,6 +1,9 @@
 package com.starbox.engine.levels;
 
+import com.starbox.engine.SpawnEntry;
+
 import java.awt.Color;
+import java.util.List;
 
 public record Level(
         String name,
@@ -9,6 +12,6 @@ public record Level(
         Color midStarColor,
         Color nearStarColor,
         double durationSeconds,
-        double baseEnemySpawnInterval
+        List<SpawnEntry> spawnSchedule
 ) {
 }

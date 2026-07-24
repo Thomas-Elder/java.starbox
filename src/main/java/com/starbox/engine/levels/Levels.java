@@ -1,5 +1,8 @@
 package com.starbox.engine.levels;
 
+import com.starbox.engine.SpawnSchedule;
+import com.starbox.engine.entities.EnemyType;
+
 import java.awt.Color;
 import java.util.List;
 
@@ -21,7 +24,22 @@ public final class Levels {
                         new Color(150, 150, 180),
                         new Color(220, 220, 255),
                         30,
-                        1.2
+                        new SpawnSchedule()
+                                .repeating(EnemyType.NORMAL, 0, 1.2, 25)
+                                .repeating(EnemyType.FRIGATE, 5, 5, 5)
+                                .at(20, EnemyType.BATTLESHIP)
+                                .build()
+                ),
+                new Level(
+                        "BOSSSSSSSSSS",
+                        new Color(80, 2, 12),
+                        new Color(90, 90, 110),
+                        new Color(150, 150, 180),
+                        new Color(220, 220, 255),
+                        30,
+                        new SpawnSchedule()
+                                .at(0, EnemyType.BOSS)
+                                .build()
                 ),
                 new Level(
                         "Sector 2: Crimson Nebula",
@@ -30,7 +48,12 @@ public final class Levels {
                         new Color(180, 85, 95),
                         new Color(255, 150, 160),
                         30,
-                        1.0
+                        new SpawnSchedule()
+                                .repeating(EnemyType.NORMAL, 0, 1.2, 12)
+                                .repeating(EnemyType.FRIGATE, 5, 3, 5)
+                                .at(15, EnemyType.BATTLESHIP)
+                                .at(20, EnemyType.BOSS)
+                                .build()
                 ),
                 new Level(
                         "Sector 3: Ion Storm",
@@ -39,7 +62,12 @@ public final class Levels {
                         new Color(90, 170, 180),
                         new Color(150, 240, 255),
                         35,
-                        0.8
+                        new SpawnSchedule()
+                                .repeating(EnemyType.NORMAL, 0, 1.2, 12)
+                                .repeating(EnemyType.FRIGATE, 5, 3, 5)
+                                .at(15, EnemyType.BATTLESHIP)
+                                .at(20, EnemyType.BOSS)
+                                .build()
                 )
         );
     }

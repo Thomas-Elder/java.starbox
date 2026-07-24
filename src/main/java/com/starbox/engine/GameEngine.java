@@ -1,10 +1,7 @@
 package com.starbox.engine;
 
 import com.starbox.GameConstants;
-import com.starbox.engine.entities.Bullet;
-import com.starbox.engine.entities.Enemy;
-import com.starbox.engine.entities.Explosion;
-import com.starbox.engine.entities.Player;
+import com.starbox.engine.entities.*;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
 import com.starbox.engine.levels.Levels;
@@ -33,6 +30,7 @@ public class GameEngine {
     private GameState state = GameState.LEVEL_INTRO;
     private double stateTimer = 0;
 
+    private int spawnIndex = 0;
     private double enemySpawnTimer = 0;
     private double enemySpawnInterval;
     private int score = 0;
@@ -40,7 +38,6 @@ public class GameEngine {
     public GameEngine() {
         Level firstLevel = levelManager.current();
         starfield = buildStarfield(firstLevel);
-        enemySpawnInterval = firstLevel.baseEnemySpawnInterval();
 
         player = new Player(
                 GameConstants.WINDOW_WIDTH / 2.0 - 14,
@@ -90,7 +87,7 @@ public class GameEngine {
             player.resetShootTimer();
         }
 
-        spawnEnemies(dt);
+        spawnScheduledEnemies();
 
         for (Bullet bullet : bullets) {
             bullet.update(dt);
@@ -144,10 +141,9 @@ public class GameEngine {
         if (levelManager.advance()) {
             Level level = levelManager.current();
             starfield = buildStarfield(level);
-            enemySpawnInterval = level.baseEnemySpawnInterval();
-            enemySpawnTimer = 0;
             state = GameState.LEVEL_INTRO;
             stateTimer = 0;
+            spawnIndex = 0;
             return;
         }
 
@@ -163,8 +159,6 @@ public class GameEngine {
 
         Level level = levelManager.current();
         starfield = buildStarfield(level);
-        enemySpawnInterval = level.baseEnemySpawnInterval();
-        enemySpawnTimer = 0;
 
         player.reset(GameConstants.WINDOW_WIDTH / 2.0 - 14, GameConstants.WINDOW_HEIGHT - 100);
 
@@ -172,13 +166,15 @@ public class GameEngine {
         stateTimer = 0;
     }
 
-    private void spawnEnemies(double dt) {
-        enemySpawnTimer -= dt;
-        if (enemySpawnTimer <= 0) {
-            enemySpawnTimer = enemySpawnInterval;
-            double x = random.nextDouble() * (GameConstants.WINDOW_WIDTH - 26);
-            enemies.add(new Enemy(x, -30));
-            enemySpawnInterval = Math.max(0.4, enemySpawnInterval - 0.01);
+    private void spawnScheduledEnemies(){
+        List<SpawnEntry> schedule = levelManager.current().spawnSchedule();
+        double elapsedSeconds = levelManager.getElapsedSeconds();
+
+        while (spawnIndex < schedule.size() && schedule.get(spawnIndex).atSeconds() <= elapsedSeconds) {
+            EnemyType type = schedule.get(spawnIndex).type();
+            double x = random.nextDouble() * (GameConstants.WINDOW_WIDTH - type.getSize());
+            enemies.add(new Enemy(x, -type.getSize(), type));
+            spawnIndex++;
         }
     }
 

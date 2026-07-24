@@ -66,7 +66,7 @@ public final class CollisionSystem {
                 explosions.add(Explosion.centeredAt(
                         enemy.getX() + enemy.getWidth() / 2.0,
                         enemy.getY() + enemy.getHeight() / 2.0));
-                player.damage(ENEMY_CONTACT_DAMAGE);
+                player.damage(enemy.getDamage());
             }
         }
 
