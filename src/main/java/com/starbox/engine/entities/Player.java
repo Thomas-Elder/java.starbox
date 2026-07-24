@@ -1,6 +1,11 @@
 package com.starbox.engine.entities;
 
+import com.starbox.engine.entities.firing.player.MultiShotFiring;
+import com.starbox.engine.entities.firing.player.PlayerFiringBehavior;
+import com.starbox.engine.entities.firing.player.SingleShotFiring;
+
 import java.awt.Color;
+import java.util.List;
 
 /**
  * The player-controlled ship. Just a green square that can move in any
@@ -12,6 +17,8 @@ public class Player extends Entity {
     private static final double SPEED = 300; // pixels per second
     private static final double SHOOT_COOLDOWN = 0.18; // seconds between shots
 
+    // Starting firing behavior
+    private PlayerFiringBehavior firingBehavior = new SingleShotFiring(0.18, 6, 10, 480);;
     private double shootTimer = 0;
     private int health = 100;
     private int lives = 3;
@@ -35,17 +42,20 @@ public class Player extends Entity {
 
         super.update(deltaSeconds);
 
-        x = clamp(x, 0, worldWidth - width);
-        y = clamp(y, 0, worldHeight - height);
+        x = Math.clamp(x, 0, worldWidth - width);
+        y = Math.clamp(y, 0, worldHeight - height);
 
         if (shootTimer > 0) {
             shootTimer -= deltaSeconds;
         }
     }
 
-    private static double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
+    public List<Bullet> fire() {
+        shootTimer = firingBehavior.getIntervalSeconds();
+        return firingBehavior.createBullets(this);
     }
+
+    public void setFiringBehavior(PlayerFiringBehavior firingBehavior){ this.firingBehavior = firingBehavior; }
 
     public boolean canShoot() {
         return alive && shootTimer <= 0;
