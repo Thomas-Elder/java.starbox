@@ -16,10 +16,6 @@ import java.util.List;
  */
 public final class CollisionSystem {
 
-    private static final int ENEMY_CONTACT_DAMAGE = 34;
-
-
-
     private CollisionSystem() {
         // no instances
     }
