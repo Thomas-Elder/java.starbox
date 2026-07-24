@@ -31,7 +31,7 @@ public final class Levels {
                                 .build()
                 ),
                 Level.boss(
-                        "BOSSSSSSSSSS",
+                        "BOSS 1",
                         new Color(80, 2, 12),
                         new Color(90, 90, 110),
                         new Color(150, 150, 180),
@@ -51,6 +51,14 @@ public final class Levels {
                                 .at(20, EnemyType.BATTLESHIP)
                                 .build()
                 ),
+                Level.boss(
+                        "BOSS 2",
+                        new Color(80, 2, 12),
+                        new Color(90, 90, 110),
+                        new Color(150, 150, 180),
+                        new Color(220, 220, 255),
+                        EnemyType.BOSS
+                ),
                 Level.normal(
                         "Sector 3: Ion Storm",
                         new Color(0, 10, 16),
@@ -63,6 +71,14 @@ public final class Levels {
                                 .repeating(EnemyType.FRIGATE, 5, 5, 5)
                                 .at(20, EnemyType.BATTLESHIP)
                                 .build()
+                ),
+                Level.boss(
+                        "FINAL BOSS",
+                        new Color(80, 2, 12),
+                        new Color(90, 90, 110),
+                        new Color(150, 150, 180),
+                        new Color(220, 220, 255),
+                        EnemyType.BOSS
                 )
         );
     }
