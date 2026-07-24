@@ -21,6 +21,14 @@ public class Bullet extends Entity {
         this.velocityY = speed;
     }
 
+    public Bullet(double x, double y, int size, int damage, Owner owner, double velocityX, double velocityY) {
+        super(x, y, size, size, owner == Owner.PLAYER ? Color.YELLOW : Color.ORANGE);
+        this.damage = damage;
+        this.owner = owner;
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
+    }
+
     public int getDamage() { return damage; }
 
     public Owner getOwner() {
