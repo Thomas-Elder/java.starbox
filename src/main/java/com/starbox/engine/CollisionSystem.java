@@ -58,11 +58,14 @@ public final class CollisionSystem {
                 continue;
             }
             if (enemy.getBounds().intersects(player.getBounds())) {
-                enemy.kill();
-                explosions.add(Explosion.centeredAt(
-                        enemy.getX() + enemy.getWidth() / 2.0,
-                        enemy.getY() + enemy.getHeight() / 2.0));
                 player.damage(enemy.getDamage());
+
+                if (enemy.diesOnPlayerContact()) {
+                    enemy.kill();
+                    explosions.add(Explosion.centeredAt(
+                            enemy.getX() + enemy.getWidth() / 2.0,
+                            enemy.getY() + enemy.getHeight() / 2.0));
+                }
             }
         }
 
