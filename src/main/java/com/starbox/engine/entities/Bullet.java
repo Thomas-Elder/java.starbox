@@ -11,14 +11,17 @@ public class Bullet extends Entity {
     public enum Owner { PLAYER, ENEMY }
 
     private static final int SIZE = 6;
-
+    private final int damage;
     private final Owner owner;
 
-    public Bullet(double x, double y, Owner owner, double speed) {
+    public Bullet(double x, double y, int damage, Owner owner, double speed) {
         super(x, y, SIZE, SIZE, owner == Owner.PLAYER ? Color.YELLOW : Color.ORANGE);
+        this.damage = damage;
         this.owner = owner;
         this.velocityY = speed;
     }
+
+    public int getDamage() { return damage; }
 
     public Owner getOwner() {
         return owner;

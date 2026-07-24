@@ -80,6 +80,7 @@ public class GameEngine {
             bullets.add(new Bullet(
                     player.getX() + player.getWidth() / 2.0 - 3,
                     player.getY(),
+                    34,
                     Bullet.Owner.PLAYER,
                     -480));
             player.resetShootTimer();

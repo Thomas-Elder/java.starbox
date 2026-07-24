@@ -6,6 +6,7 @@ public class Enemy extends Entity {
 
     private final EnemyType type;
     private double age = 0;
+    private int hp;
     private final double baseX;
     private final double wiggleAmplitude;
     private final double wiggleFrequency;
@@ -13,6 +14,7 @@ public class Enemy extends Entity {
     public Enemy(double x, double y, EnemyType type) {
         super(x, y, type.getSize(), type.getSize(), Color.RED);
         this.type = type;
+        this.hp = type.getHp();
         this.velocityY = type.getSpeed();
         this.baseX = x;
         this.wiggleAmplitude = 40 + Math.random() * 40;
@@ -28,6 +30,14 @@ public class Enemy extends Entity {
 
     public int getScoreValue() {
         return type.getScoreValue();
+    }
+
+    public void damage(int damage) {
+        hp -= damage;
+
+        if (hp <= 0) {
+            kill();
+        }
     }
 
     public int getDamage(){

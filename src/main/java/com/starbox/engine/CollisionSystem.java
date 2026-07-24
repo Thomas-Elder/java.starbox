@@ -42,7 +42,7 @@ public final class CollisionSystem {
                 }
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
                     bullet.kill();
-                    enemy.kill();
+                    enemy.damage(bullet.getDamage());
                     scoreGained += enemy.getScoreValue();
                     explosions.add(Explosion.centeredAt(
                             enemy.getX() + enemy.getWidth() / 2.0,
