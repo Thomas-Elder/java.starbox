@@ -78,4 +78,7 @@ public class InputHandler implements KeyListener {
     public boolean isShootJustPressed() {
         return consumeJustPressed(KeyEvent.VK_SPACE);
     }
+    public boolean isEJustPressed() {
+        return consumeJustPressed(KeyEvent.VK_E);
+    }
 }

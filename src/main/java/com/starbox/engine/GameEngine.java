@@ -66,7 +66,12 @@ public class GameEngine {
 
     private void updateLevelIntro(double dt, InputHandler input) {
         stateTimer += dt;
-        if (stateTimer >= GameConstants.LEVEL_INTRO_SECONDS || input.isShootJustPressed()) {
+
+        player.move(dt, input.isUpPressed(), input.isDownPressed(),
+                input.isLeftPressed(), input.isRightPressed(),
+                GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
+
+        if (stateTimer >= GameConstants.LEVEL_INTRO_SECONDS || input.isEJustPressed()) {
             state = GameState.PLAYING;
             stateTimer = 0;
         }
@@ -139,14 +144,23 @@ public class GameEngine {
 
     private void updateLevelComplete(double dt, InputHandler input) {
         stateTimer += dt;
-        if (input.isShootJustPressed()) {
+
+        player.move(dt, input.isUpPressed(), input.isDownPressed(),
+                input.isLeftPressed(), input.isRightPressed(),
+                GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
+
+        for (Explosion explosion : explosions){
+            explosion.update(dt);
+        }
+
+        if (input.isEJustPressed()) {
             goToNextLevel();
         }
     }
 
     private void updateEndScreen(double dt, InputHandler input) {
         stateTimer += dt;
-        if (input.isShootJustPressed()) {
+        if (input.isEJustPressed()) {
             restartCampaign();
         }
     }
