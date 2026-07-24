@@ -1,8 +1,8 @@
 package com.starbox.engine.entities;
 
-import com.starbox.engine.entities.firing.player.MultiShotFiring;
 import com.starbox.engine.entities.firing.player.PlayerFiringBehavior;
 import com.starbox.engine.entities.firing.player.SingleShotFiring;
+import com.starbox.engine.entities.firing.player.SpreadShotFiring;
 
 import java.awt.Color;
 import java.util.List;
@@ -18,7 +18,7 @@ public class Player extends Entity {
     private static final double SHOOT_COOLDOWN = 0.18; // seconds between shots
 
     // Starting firing behavior
-    private PlayerFiringBehavior firingBehavior = new SingleShotFiring(0.18, 6, 10, 480);;
+    private PlayerFiringBehavior firingBehavior = new SpreadShotFiring(0.18, 6, 10, 480, 5, 30);
     private double shootTimer = 0;
     private int health = 100;
     private int lives = 3;
@@ -59,10 +59,6 @@ public class Player extends Entity {
 
     public boolean canShoot() {
         return alive && shootTimer <= 0;
-    }
-
-    public void resetShootTimer() {
-        shootTimer = SHOOT_COOLDOWN;
     }
 
     public int getHealth() {
