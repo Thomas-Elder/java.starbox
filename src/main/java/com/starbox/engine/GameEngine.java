@@ -31,8 +31,6 @@ public class GameEngine {
     private double stateTimer = 0;
 
     private int spawnIndex = 0;
-    private double enemySpawnTimer = 0;
-    private double enemySpawnInterval;
     private int score = 0;
 
     public GameEngine() {
