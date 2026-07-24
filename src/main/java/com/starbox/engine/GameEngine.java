@@ -85,13 +85,7 @@ public class GameEngine {
                 GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
 
         if (input.isShootPressed() && player.canShoot()) {
-            bullets.add(new Bullet(
-                    player.getX() + player.getWidth() / 2.0 - 3,
-                    player.getY(),
-                    10,
-                    Bullet.Owner.PLAYER,
-                    -480));
-            player.resetShootTimer();
+            bullets.addAll(player.fire());
         }
 
         if (level.levelType() == LevelType.BOSS) {
@@ -103,9 +97,16 @@ public class GameEngine {
         for (Bullet bullet : bullets) {
             bullet.update(dt);
         }
+
+        List<Enemy> spawnedByEnemies = new ArrayList<>();
         for (Enemy enemy : enemies) {
             enemy.update(dt);
+            enemy.updateFiring(dt, player);
+            enemy.updateSpawning(dt);
+            bullets.addAll(enemy.collectFiredBullets());
+            spawnedByEnemies.addAll(enemy.collectSpawnedEnemies());
         }
+        enemies.addAll(spawnedByEnemies);
 
         var collisionResult = CollisionSystem.resolve(player, bullets, enemies);
 
