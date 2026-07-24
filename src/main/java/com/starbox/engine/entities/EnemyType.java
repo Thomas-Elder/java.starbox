@@ -3,12 +3,12 @@ package com.starbox.engine.entities;
 import java.awt.Color;
 
 public enum EnemyType {
-    NORMAL(26, 33, 120, 33, 10, Color.RED),
-    FRIGATE(36, 65, 100, 43, 20, Color.RED),
-    BATTLESHIP(46, 100, 80, 53, 30, Color.RED),
-    AIRCRAFT_CARRIER(56, 130, 60, 63, 40, Color.RED),
-    STATION(46, 65, 0, 53, 30, Color.RED),
-    BOSS(112, 670, 20, 100, 100, Color.RED);
+    NORMAL(26, 19, 120, 33, 10, Color.RED),
+    FRIGATE(36, 39, 100, 43, 20, Color.RED),
+    BATTLESHIP(46, 59, 80, 53, 30, Color.RED),
+    AIRCRAFT_CARRIER(56, 99, 60, 63, 40, Color.RED),
+    STATION(46, 59, 0, 53, 30, Color.RED),
+    BOSS(112, 599, 30, 100, 100, Color.RED);
 
     private final int size;
     private final int startingHealth;
