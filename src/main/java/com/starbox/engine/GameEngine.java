@@ -84,7 +84,9 @@ public class GameEngine {
                 input.isLeftPressed(), input.isRightPressed(),
                 GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
 
-        if (input.isShootPressed() && player.canShoot()) {
+        player.tickFiringCooldowns(dt);
+
+        if (input.isShootPressed()) {
             bullets.addAll(player.fire());
         }
 

@@ -5,6 +5,7 @@ import com.starbox.engine.entities.firing.player.SingleShotFiring;
 import com.starbox.engine.entities.firing.player.SpreadShotFiring;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,18 +14,31 @@ import java.util.List;
  */
 public class Player extends Entity {
 
+    private static final class FiringSlot {
+        final PlayerFiringBehavior behavior;
+        double cooldownRemaining = 0; // ready to shoot as soon as a behavior is added.
+        double durationRemaining;
+
+        FiringSlot(PlayerFiringBehavior behavior) {
+            this.behavior = behavior;
+            this.durationRemaining = behavior.getDurationSeconds();
+        }
+    }
+
     private static final int SIZE = 28;
     private static final double SPEED = 300; // pixels per second
-    private static final double SHOOT_COOLDOWN = 0.18; // seconds between shots
 
-    // Starting firing behavior
-    private PlayerFiringBehavior firingBehavior = new SpreadShotFiring(0.18, 6, 10, 480, 5, 30);
-    private double shootTimer = 0;
+    private final List<Player.FiringSlot> firingSlots = new ArrayList<>();
+    private final List<Bullet> pendingBullets = new ArrayList<>();
+
     private int health = 100;
     private int lives = 3;
 
     public Player(double x, double y) {
         super(x, y, SIZE, SIZE, Color.GREEN);
+
+        // Add default single shot firing behavior
+        firingSlots.add(new Player.FiringSlot(new SingleShotFiring(0.18, Double.POSITIVE_INFINITY, 6, 10, 480 )));
     }
 
     /**
@@ -44,22 +58,38 @@ public class Player extends Entity {
 
         x = Math.clamp(x, 0, worldWidth - width);
         y = Math.clamp(y, 0, worldHeight - height);
+    }
 
-        if (shootTimer > 0) {
-            shootTimer -= deltaSeconds;
+    /**
+     * For each firing behavior the player currently has, tick the cooldown and duration.
+     * @param dt deltatime
+     */
+    public void tickFiringCooldowns(double dt) {
+        for (FiringSlot slot : firingSlots) {
+            slot.cooldownRemaining -= dt;
+            slot.durationRemaining -= dt;
         }
+        firingSlots.removeIf(slot -> slot.durationRemaining <= 0);
     }
 
+    /**
+     * Fires all bullets created by firing behaviors not on cooldown.
+     * @return a List of Bullets fired this tick.
+     */
     public List<Bullet> fire() {
-        shootTimer = firingBehavior.getIntervalSeconds();
-        return firingBehavior.createBullets(this);
+        if (!alive) return List.of();
+
+        List<Bullet> firedBullets = new ArrayList<>();
+        for (FiringSlot slot : firingSlots) {
+            if (slot.cooldownRemaining <= 0) {
+                firedBullets.addAll(slot.behavior.createBullets(this));
+                slot.cooldownRemaining = slot.behavior.getCooldownSeconds();
+            }
+        }
+        return firedBullets;
     }
 
-    public void setFiringBehavior(PlayerFiringBehavior firingBehavior){ this.firingBehavior = firingBehavior; }
-
-    public boolean canShoot() {
-        return alive && shootTimer <= 0;
-    }
+    public void addFiringBehavior(PlayerFiringBehavior firingBehavior){ firingSlots.add(new FiringSlot(firingBehavior)); }
 
     public int getHealth() {
         return health;
@@ -96,7 +126,10 @@ public class Player extends Entity {
         this.y = startY;
         this.health = 100;
         this.lives = 3;
-        this.shootTimer = 0;
         this.alive = true;
+
+        // Reset firing slots
+        firingSlots.clear();
+        firingSlots.add(new Player.FiringSlot(new SingleShotFiring(0.18, Double.POSITIVE_INFINITY, 6, 10, 480 )));
     }
 }
