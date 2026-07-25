@@ -1,7 +1,8 @@
 package com.starbox.engine.levels;
 
-import com.starbox.engine.SpawnSchedule;
-import com.starbox.engine.entities.EnemyType;
+import com.starbox.engine.entities.PowerupType;
+import com.starbox.engine.spawn.SpawnSchedule;
+import com.starbox.engine.entities.enemy.EnemyType;
 
 import java.awt.Color;
 import java.util.List;
@@ -23,11 +24,15 @@ public final class Levels {
                         new Color(90, 90, 110),
                         new Color(150, 150, 180),
                         new Color(220, 220, 255),
-                        5,
-                        new SpawnSchedule()
+                        30,
+                        new SpawnSchedule<EnemyType>()
                                 .repeating(EnemyType.NORMAL, 0, 1.2, 25)
                                 .repeating(EnemyType.FRIGATE, 5, 5, 5)
                                 .at(20, EnemyType.BATTLESHIP)
+                                .build(),
+                        new SpawnSchedule<PowerupType>()
+                                .at(10.0, PowerupType.RAPIDFIRE)
+                                .at(20.0, PowerupType.SPREADSHOT)
                                 .build()
                 ),
                 Level.boss(
@@ -36,6 +41,8 @@ public final class Levels {
                         new Color(90, 90, 110),
                         new Color(150, 150, 180),
                         new Color(220, 220, 255),
+                        List.of(),
+                        List.of(),
                         EnemyType.BOSS_ONE
                 ),
                 Level.normal(
@@ -45,10 +52,14 @@ public final class Levels {
                         new Color(180, 85, 95),
                         new Color(255, 150, 160),
                         30,
-                        new SpawnSchedule()
+                        new SpawnSchedule<EnemyType>()
                                 .repeating(EnemyType.NORMAL, 0, 1.2, 25)
                                 .repeating(EnemyType.FRIGATE, 5, 5, 5)
                                 .at(20, EnemyType.BATTLESHIP)
+                                .build(),
+                        new SpawnSchedule<PowerupType>()
+                                .at(10.0, PowerupType.RAPIDFIRE)
+                                .at(22.0, PowerupType.SPREADSHOT)
                                 .build()
                 ),
                 Level.boss(
@@ -57,6 +68,8 @@ public final class Levels {
                         new Color(90, 90, 110),
                         new Color(150, 150, 180),
                         new Color(220, 220, 255),
+                        List.of(),
+                        List.of(),
                         EnemyType.BOSS_TWO
                 ),
                 Level.normal(
@@ -66,10 +79,14 @@ public final class Levels {
                         new Color(90, 170, 180),
                         new Color(150, 240, 255),
                         35,
-                        new SpawnSchedule()
+                        new SpawnSchedule<EnemyType>()
                                 .repeating(EnemyType.NORMAL, 0, 1.2, 25)
                                 .repeating(EnemyType.FRIGATE, 5, 5, 5)
                                 .at(20, EnemyType.BATTLESHIP)
+                                .build(),
+                        new SpawnSchedule<PowerupType>()
+                                .at(10.0, PowerupType.RAPIDFIRE)
+                                .at(22.0, PowerupType.SPREADSHOT)
                                 .build()
                 ),
                 Level.boss(
@@ -78,6 +95,8 @@ public final class Levels {
                         new Color(90, 90, 110),
                         new Color(150, 150, 180),
                         new Color(220, 220, 255),
+                        List.of(),
+                        List.of(),
                         EnemyType.BOSS_THREE
                 )
         );
