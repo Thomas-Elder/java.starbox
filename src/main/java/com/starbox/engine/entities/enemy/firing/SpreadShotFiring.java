@@ -1,8 +1,8 @@
-package com.starbox.engine.entities.firing.enemy;
+package com.starbox.engine.entities.enemy.firing;
 
 import com.starbox.engine.entities.Bullet;
-import com.starbox.engine.entities.Enemy;
-import com.starbox.engine.entities.Player;
+import com.starbox.engine.entities.enemy.Enemy;
+import com.starbox.engine.entities.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
