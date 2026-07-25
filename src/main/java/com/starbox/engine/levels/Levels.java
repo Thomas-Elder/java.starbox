@@ -36,7 +36,7 @@ public final class Levels {
                         new Color(90, 90, 110),
                         new Color(150, 150, 180),
                         new Color(220, 220, 255),
-                        EnemyType.BOSS
+                        EnemyType.BOSS_ONE
                 ),
                 Level.normal(
                         "Sector 2: Crimson Nebula",
@@ -57,7 +57,7 @@ public final class Levels {
                         new Color(90, 90, 110),
                         new Color(150, 150, 180),
                         new Color(220, 220, 255),
-                        EnemyType.BOSS
+                        EnemyType.BOSS_TWO
                 ),
                 Level.normal(
                         "Sector 3: Ion Storm",
@@ -78,7 +78,7 @@ public final class Levels {
                         new Color(90, 90, 110),
                         new Color(150, 150, 180),
                         new Color(220, 220, 255),
-                        EnemyType.BOSS
+                        EnemyType.BOSS_THREE
                 )
         );
     }

@@ -14,26 +14,40 @@ public enum EnemyType {
     ),
 
     FRIGATE(36, 39, 100, 43, 20, Color.RED,
-            List.of(new AimedShotFiring(1.8, 6, 12, 220)),
+            List.of(new AimedShotFiring(1.8, 16, 30, 220)),
             null
     ),
 
     BATTLESHIP(46, 59, 80, 53, 30, Color.RED,
-            List.of(new SpreadShotFiring(1.8, 6, 12, 240, 5, 45)),
+            List.of(new SpreadShotFiring(1.8, 6, 12, 240, 7, 45)),
             null
     ),
 
     AIRCRAFT_CARRIER(56, 99, 60, 63, 40, Color.RED,
-            List.of(new StraightShotFiring(1.8, 6, 12, 280)),
+            List.of(new StraightShotFiring(1.8, 10, 20, 280)),
             new FighterSpawnBehavior(6.0, NORMAL)
     ),
     //STATION(46, 59, 0, 53, 30, Color.RED, , ),
 
     // Boss for the first level
-    BOSS(112, 599, 30, 100, 100, Color.RED,
+    BOSS_ONE(112, 599, 30, 100, 100, Color.RED,
             List.of(new SpreadShotFiring(1.8, 6, 12, 240, 7, 45),
-                    new AimedShotFiring(1.2, 6, 12, 220)),
+                    new AimedShotFiring(1.2, 16, 30, 220)),
             new FighterSpawnBehavior(6.0, NORMAL)
+    ),
+
+    // Boss for the second level
+    BOSS_TWO(112, 599, 30, 100, 100, Color.RED,
+            List.of(new SpreadShotFiring(1.5, 6, 12, 250, 8, 50),
+                    new AimedShotFiring(1.0, 16, 30, 230)),
+            new FighterSpawnBehavior(5.0, NORMAL)
+    ),
+
+    // Boss for the second level
+    BOSS_THREE(112, 599, 30, 100, 100, Color.RED,
+            List.of(new SpreadShotFiring(1.3, 6, 12, 260, 9, 55),
+                    new AimedShotFiring(0.8, 16, 30, 240)),
+            new FighterSpawnBehavior(4.0, NORMAL)
     );
 
     private final int size;
