@@ -6,20 +6,25 @@ import com.starbox.engine.entities.Player;
 import java.util.List;
 
 public class SingleShotFiring implements PlayerFiringBehavior {
-    private final double intervalSeconds;
+    private final double cooldownSeconds;
+    private final double durationSeconds;
     private final int bulletSize;
     private final int bulletDamage;
     private final double bulletSpeed;
 
-    public SingleShotFiring(double intervalSeconds, int bulletSize, int bulletDamage, double bulletSpeed) {
-        this.intervalSeconds = intervalSeconds;
+    public SingleShotFiring(double cooldownSeconds, double durationSeconds, int bulletSize, int bulletDamage, double bulletSpeed) {
+        this.cooldownSeconds = cooldownSeconds;
+        this.durationSeconds = durationSeconds;
         this.bulletSize = bulletSize;
         this.bulletDamage = bulletDamage;
         this.bulletSpeed = bulletSpeed;
     }
 
     @Override
-    public double getIntervalSeconds() { return intervalSeconds; }
+    public double getCooldownSeconds() { return cooldownSeconds; }
+
+    @Override
+    public double getDurationSeconds() { return durationSeconds; }
 
     @Override
     public List<Bullet> createBullets(Player shooter) {

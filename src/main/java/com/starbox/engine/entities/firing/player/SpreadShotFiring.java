@@ -7,15 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpreadShotFiring implements PlayerFiringBehavior {
-    private final double intervalSeconds;
+    private final double cooldownSeconds;
+    private final double durationSeconds;
     private final int bulletSize;
     private final int bulletDamage;
     private final double bulletSpeed;
     private final double bulletCount;
     private final double spreadDegrees;
 
-    public SpreadShotFiring(double intervalSeconds, int bulletSize, int bulletDamage, double bulletSpeed, double bulletCount, double spreadDegrees){
-        this.intervalSeconds = intervalSeconds;
+    public SpreadShotFiring(double cooldownSeconds, double durationSeconds, int bulletSize, int bulletDamage, double bulletSpeed, double bulletCount, double spreadDegrees){
+        this.cooldownSeconds = cooldownSeconds;
+        this.durationSeconds = durationSeconds;
         this.bulletSize = bulletSize;
         this.bulletDamage = bulletDamage;
         this.bulletSpeed = bulletSpeed;
@@ -24,7 +26,10 @@ public class SpreadShotFiring implements PlayerFiringBehavior {
     }
 
     @Override
-    public double getIntervalSeconds() { return intervalSeconds; }
+    public double getCooldownSeconds() { return cooldownSeconds; }
+
+    @Override
+    public double getDurationSeconds() { return durationSeconds; }
 
     @Override
     public List<Bullet> createBullets(Player shooter){

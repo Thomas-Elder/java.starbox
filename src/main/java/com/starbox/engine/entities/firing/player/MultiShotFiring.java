@@ -7,14 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiShotFiring implements PlayerFiringBehavior{
-    private final double intervalSeconds;
+    private final double cooldownSeconds;
+    private final double durationSeconds;
     private final int bulletSize;
     private final int bulletDamage;
     private final double bulletSpeed;
     private final int bulletCount;
 
-    public MultiShotFiring(double intervalSeconds, int bulletSize, int bulletDamage, double bulletSpeed, int bulletCount) {
-        this.intervalSeconds = intervalSeconds;
+    public MultiShotFiring(double cooldownSeconds, double durationSeconds, int bulletSize, int bulletDamage, double bulletSpeed, int bulletCount) {
+        this.cooldownSeconds = cooldownSeconds;
+        this.durationSeconds = durationSeconds;
         this.bulletSize = bulletSize;
         this.bulletDamage = bulletDamage;
         this.bulletSpeed = bulletSpeed;
@@ -22,7 +24,10 @@ public class MultiShotFiring implements PlayerFiringBehavior{
     }
 
     @Override
-    public double getIntervalSeconds() { return intervalSeconds; }
+    public double getCooldownSeconds() { return cooldownSeconds; }
+
+    @Override
+    public double getDurationSeconds() { return durationSeconds; }
 
     @Override
     public List<Bullet> createBullets(Player shooter) {

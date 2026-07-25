@@ -6,6 +6,7 @@ import com.starbox.engine.entities.Player;
 import java.util.List;
 
 public interface PlayerFiringBehavior {
-    double getIntervalSeconds();
+    double getCooldownSeconds();
+    double getDurationSeconds();
     List<Bullet> createBullets(Player shooter);
 }
