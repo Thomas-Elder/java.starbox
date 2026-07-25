@@ -1,4 +1,4 @@
-package com.starbox.engine.entities;
+package com.starbox.engine.entities.enemy;
 
 public class Boss extends Enemy {
 

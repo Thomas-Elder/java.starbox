@@ -1,8 +1,11 @@
-package com.starbox.engine.entities;
+package com.starbox.engine.entities.enemy;
 
-import com.starbox.engine.entities.firing.enemy.*;
-import com.starbox.engine.entities.spawning.FighterSpawnBehavior;
-import com.starbox.engine.entities.spawning.SpawnBehavior;
+import com.starbox.engine.entities.enemy.firing.AimedShotFiring;
+import com.starbox.engine.entities.enemy.firing.FiringBehavior;
+import com.starbox.engine.entities.enemy.firing.SpreadShotFiring;
+import com.starbox.engine.entities.enemy.firing.StraightShotFiring;
+import com.starbox.engine.spawn.FighterSpawnBehavior;
+import com.starbox.engine.spawn.SpawnBehavior;
 
 import java.awt.Color;
 import java.util.List;
