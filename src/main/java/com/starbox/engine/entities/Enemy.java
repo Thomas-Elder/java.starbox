@@ -9,6 +9,20 @@ import java.util.List;
 
 public class Enemy extends Entity {
 
+    /**
+     * Private helper class. Notes for future Tom:
+     * static here does not mean "cannot be instantiated", it means "decoupled from the
+     * surrounding context".
+     * In the more common context you're used to, with functions being static, it means
+     * the function is not dependent on an instance of the class. And therefore you cannot
+     * call new Class().staticFunction(), the function has no reference to an instance.
+     * Here it means this class is not tied to an instance of Enemy. That does not mean
+     * that we cannot instantiate FiringSlot though!
+     * In fact, if we made FiringSlot non-static, we'd have problems. Every time we create a
+     * FiringSlot, a reference to the instance of Enemy creating it is passed into
+     * FiringSlot, and we end up with many refs to a single instance. This can cause
+     * performance issues.
+     */
     private static final class FiringSlot {
         final FiringBehavior behavior;
         double cooldown;
