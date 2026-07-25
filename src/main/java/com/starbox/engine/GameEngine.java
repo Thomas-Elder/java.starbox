@@ -1,11 +1,17 @@
 package com.starbox.engine;
 
 import com.starbox.GameConstants;
+import com.starbox.engine.collision.CollisionSystem;
 import com.starbox.engine.entities.*;
+import com.starbox.engine.entities.enemy.Boss;
+import com.starbox.engine.entities.enemy.Enemy;
+import com.starbox.engine.entities.enemy.EnemyType;
+import com.starbox.engine.entities.player.Player;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
 import com.starbox.engine.levels.LevelType;
 import com.starbox.engine.levels.Levels;
+import com.starbox.engine.spawn.SpawnEntry;
 import com.starbox.io.InputHandler;
 
 import java.util.ArrayList;
@@ -25,12 +31,14 @@ public class GameEngine {
     private final List<Bullet> bullets = new ArrayList<>();
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Explosion> explosions = new ArrayList<>();
+    private final List<Powerup> powerups = new ArrayList<>();
     private final Random random = new Random();
 
     private Starfield starfield;
     private GameState state = GameState.LEVEL_INTRO;
     private double stateTimer = 0;
-    private int spawnIndex = 0;
+    private int enemySpawnIndex = 0;
+    private int powerupSpawnIndex = 0;
     private int score = 0;
     private Boss boss;
 
@@ -94,6 +102,7 @@ public class GameEngine {
             spawnBossIfNeeded(level);
         } else {
             spawnScheduledEnemies();
+            spawnSchedulePowerups();
         }
 
         for (Bullet bullet : bullets) {
@@ -117,6 +126,16 @@ public class GameEngine {
 
         for (Explosion explosion : explosions){
             explosion.update(dt);
+        }
+
+        var pickUpResult = CollisionSystem.pickUpResolve(player, powerups);
+
+        for (Powerup powerup : pickUpResult.powerUps()) {
+            player.addFiringBehavior(powerup.getFiringBehavior());
+        }
+
+        for (Powerup powerup: powerups) {
+            powerup.update(dt);
         }
 
         removeOffscreenAndDead();
@@ -174,7 +193,8 @@ public class GameEngine {
             starfield = buildStarfield(level);
             state = GameState.LEVEL_INTRO;
             stateTimer = 0;
-            spawnIndex = 0;
+            enemySpawnIndex = 0;
+            powerupSpawnIndex = 0;
             boss = null;
             return;
         }
@@ -196,11 +216,24 @@ public class GameEngine {
 
         state = GameState.LEVEL_INTRO;
         stateTimer = 0;
-        spawnIndex = 0;
+        enemySpawnIndex = 0;
+        powerupSpawnIndex = 0;
+    }
+
+    private void spawnSchedulePowerups() {
+        List<SpawnEntry<PowerupType>> schedule = levelManager.current().powerupSchedule();
+        double elapsedSeconds = levelManager.getElapsedSeconds();
+
+        while (powerupSpawnIndex < schedule.size() && schedule.get(powerupSpawnIndex).atSeconds() <= elapsedSeconds){
+            PowerupType type = schedule.get(powerupSpawnIndex).payload();
+            double x = random.nextDouble() * (GameConstants.WINDOW_WIDTH - 20);
+            powerups.add(new Powerup(x, -20, type));
+            powerupSpawnIndex++;
+        }
     }
 
     private void spawnScheduledEnemies(){
-        List<SpawnEntry> schedule = levelManager.current().spawnSchedule();
+        List<SpawnEntry<EnemyType>> schedule = levelManager.current().enemySchedule();
         double elapsedSeconds = levelManager.getElapsedSeconds();
 
         // While there are more enemies to spawn in the schedule, and the next Enemy to spawn is prior to
@@ -209,11 +242,11 @@ public class GameEngine {
         // Once elapsed time increase to 5.1, we go into the loop.
         // It's a loop incase multiple spawns are scheduled at the same time and need to be
         // instantiated in the same tick.
-        while (spawnIndex < schedule.size() && schedule.get(spawnIndex).atSeconds() <= elapsedSeconds) {
-            EnemyType type = schedule.get(spawnIndex).type();
+        while (enemySpawnIndex < schedule.size() && schedule.get(enemySpawnIndex).atSeconds() <= elapsedSeconds) {
+            EnemyType type = schedule.get(enemySpawnIndex).payload();
             double x = random.nextDouble() * (GameConstants.WINDOW_WIDTH - type.getSize());
             enemies.add(new Enemy(x, -type.getSize(), type));
-            spawnIndex++;
+            enemySpawnIndex++;
         }
     }
 
@@ -230,6 +263,7 @@ public class GameEngine {
         bullets.removeIf(b -> !b.isAlive() || b.getY() < -20 || b.getY() > GameConstants.WINDOW_HEIGHT + 20);
         enemies.removeIf(e -> !e.isAlive() || e.getY() > GameConstants.WINDOW_HEIGHT + 40);
         explosions.removeIf(e -> !e.isAlive());
+        powerups.removeIf(p -> !p.isAlive());
     }
 
     // ------------------------------------------------------------------
@@ -258,6 +292,10 @@ public class GameEngine {
 
     public List<Explosion> getExplosions() {
         return Collections.unmodifiableList(explosions);
+    }
+
+    public List<Powerup> getPowerups (){
+        return Collections.unmodifiableList(powerups);
     }
 
     public Starfield getStarfield() {
