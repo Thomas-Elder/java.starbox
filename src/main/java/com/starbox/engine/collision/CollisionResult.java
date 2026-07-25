@@ -1,4 +1,4 @@
-package com.starbox.engine;
+package com.starbox.engine.collision;
 
 import com.starbox.engine.entities.Explosion;
 

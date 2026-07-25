@@ -1,8 +1,9 @@
-package com.starbox.engine.entities;
+package com.starbox.engine.entities.player;
 
-import com.starbox.engine.entities.firing.player.PlayerFiringBehavior;
-import com.starbox.engine.entities.firing.player.SingleShotFiring;
-import com.starbox.engine.entities.firing.player.SpreadShotFiring;
+import com.starbox.engine.entities.Bullet;
+import com.starbox.engine.entities.Entity;
+import com.starbox.engine.entities.player.firing.PlayerFiringBehavior;
+import com.starbox.engine.entities.player.firing.SingleShotFiring;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ public class Player extends Entity {
     private static final double SPEED = 300; // pixels per second
 
     private final List<Player.FiringSlot> firingSlots = new ArrayList<>();
-    private final List<Bullet> pendingBullets = new ArrayList<>();
 
     private int health = 100;
     private int lives = 3;
