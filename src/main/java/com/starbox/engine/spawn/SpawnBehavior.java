@@ -1,6 +1,6 @@
-package com.starbox.engine.entities.spawning;
+package com.starbox.engine.spawn;
 
-import com.starbox.engine.entities.Enemy;
+import com.starbox.engine.entities.enemy.Enemy;
 
 import java.util.List;
 
