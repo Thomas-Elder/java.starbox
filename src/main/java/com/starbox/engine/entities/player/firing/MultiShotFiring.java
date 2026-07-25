@@ -1,7 +1,7 @@
-package com.starbox.engine.entities.firing.player;
+package com.starbox.engine.entities.player.firing;
 
 import com.starbox.engine.entities.Bullet;
-import com.starbox.engine.entities.Player;
+import com.starbox.engine.entities.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
