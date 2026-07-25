@@ -1,9 +1,8 @@
-package com.starbox.engine;
+package com.starbox.engine.collision;
 
-import com.starbox.engine.entities.Bullet;
-import com.starbox.engine.entities.Enemy;
-import com.starbox.engine.entities.Explosion;
-import com.starbox.engine.entities.Player;
+import com.starbox.engine.entities.*;
+import com.starbox.engine.entities.enemy.Enemy;
+import com.starbox.engine.entities.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,5 +93,19 @@ public final class CollisionSystem {
         }
 
         return new CollisionResult(scoreGained, explosions);
+    }
+
+    public static PickUpResult pickUpResolve(Player player, List<Powerup> powerups) {
+
+        List<Powerup> collectedPowerUps = new ArrayList<>();
+
+        for (Powerup powerup : powerups) {
+            if (powerup.getBounds().intersects(player.getBounds())) {
+                powerup.kill();
+                collectedPowerUps.add(powerup);
+            }
+        }
+
+        return new PickUpResult(collectedPowerUps);
     }
 }
