@@ -2,10 +2,9 @@ package com.starbox.io;
 
 import com.starbox.GameConstants;
 import com.starbox.engine.GameEngine;
-import com.starbox.engine.entities.Boss;
-import com.starbox.engine.entities.Bullet;
-import com.starbox.engine.entities.Enemy;
-import com.starbox.engine.entities.Explosion;
+import com.starbox.engine.entities.*;
+import com.starbox.engine.entities.enemy.Boss;
+import com.starbox.engine.entities.enemy.Enemy;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
 import com.starbox.engine.levels.LevelType;
@@ -47,6 +46,10 @@ public final class GameRenderer {
 
         for (Explosion explosion: engine.getExplosions()){
             explosion.render(g);
+        }
+
+        for (Powerup powerup: engine.getPowerups()) {
+            powerup.render(g);
         }
 
         // Player
