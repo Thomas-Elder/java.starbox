@@ -1,5 +1,7 @@
 package com.starbox.engine.collision;
 
+import com.starbox.engine.GameEvent;
+import com.starbox.engine.GameEventType;
 import com.starbox.engine.entities.*;
 import com.starbox.engine.entities.enemy.Enemy;
 import com.starbox.engine.entities.player.Player;
@@ -9,9 +11,7 @@ import java.util.List;
 
 
 /**
- * Resolves collisions between bullets, enemies, and the player for a
- * single tick. Pulled out of GameEngine so collision rules can be read,
- * tested, and changed independently of the rest of the update loop.
+ * Collides stuff
  */
 public final class CollisionSystem {
 
@@ -28,7 +28,7 @@ public final class CollisionSystem {
     public static CollisionResult resolve(Player player, List<Bullet> bullets, List<Enemy> enemies) {
 
         int scoreGained = 0;
-        var explosions = new ArrayList<Explosion>();
+        var events = new ArrayList<GameEvent>();
 
 
         for (Bullet bullet : bullets) {
@@ -37,14 +37,16 @@ public final class CollisionSystem {
             if (bullet.getOwner() != Bullet.Owner.PLAYER || !bullet.isAlive()) {
                 if (bullet.getBounds().intersects(player.getBounds())) {
                     bullet.kill();
-                    explosions.add(Explosion.centeredAt(
+                    events.add(new GameEvent(
+                            GameEventType.PLAYER_HIT,
                             bullet.getX() + bullet.getWidth() / 2.0,
                             bullet.getY() + bullet.getHeight() / 2.0));
+
                     if(player.damage(bullet.getDamage())) {
-                        explosions.add(Explosion.centeredAt(
-                                player.getX() + player.getWidth() / 2.0,
-                                player.getY() + player.getHeight() / 2.0,
-                                player.getWidth()));
+                        events.add(new GameEvent(
+                                GameEventType.PLAYER_KILLED,
+                                bullet.getX() + bullet.getWidth() / 2.0,
+                                bullet.getY() + bullet.getHeight() / 2.0));
                     }
                 }
             }
@@ -56,16 +58,17 @@ public final class CollisionSystem {
                 }
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
                     bullet.kill();
-                    explosions.add(Explosion.centeredAt(
+                    events.add(new GameEvent(
+                            GameEventType.ENEMY_HIT,
                             bullet.getX() + bullet.getWidth() / 2.0,
                             bullet.getY() + bullet.getHeight() / 2.0));
 
                     if (enemy.damage(bullet.getDamage())) {
                         scoreGained += enemy.getScoreValue();
-                        explosions.add(Explosion.centeredAt(
-                                enemy.getX() + enemy.getWidth() / 2.0,
-                                enemy.getY() + enemy.getHeight() / 2.0,
-                                        enemy.getWidth()));
+                        events.add(new GameEvent(
+                                GameEventType.ENEMY_KILLED,
+                                bullet.getX() + bullet.getWidth() / 2.0,
+                                bullet.getY() + bullet.getHeight() / 2.0));
                     }
                     break;
                 }
@@ -85,14 +88,15 @@ public final class CollisionSystem {
 
                 if (enemy.diesOnPlayerContact()) {
                     enemy.kill();
-                    explosions.add(Explosion.centeredAt(
+                    events.add(new GameEvent(
+                            GameEventType.ENEMY_KILLED,
                             enemy.getX() + enemy.getWidth() / 2.0,
                             enemy.getY() + enemy.getHeight() / 2.0));
                 }
             }
         }
 
-        return new CollisionResult(scoreGained, explosions);
+        return new CollisionResult(scoreGained, events);
     }
 
     public static PickUpResult pickUpResolve(Player player, List<Powerup> powerups) {

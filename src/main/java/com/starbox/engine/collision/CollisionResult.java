@@ -1,7 +1,7 @@
 package com.starbox.engine.collision;
 
-import com.starbox.engine.entities.Explosion;
+import com.starbox.engine.GameEvent;
 
 import java.util.List;
 
-public record CollisionResult (int scoreGained, List<Explosion> explosions) {}
+public record CollisionResult (int scoreGained, List<GameEvent> events) {}
