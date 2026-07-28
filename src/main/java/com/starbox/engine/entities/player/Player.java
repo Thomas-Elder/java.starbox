@@ -25,10 +25,6 @@ public class Player extends Entity {
             this.behavior = behavior;
             this.durationRemaining = behavior.getDurationSeconds();
         }
-
-        PlayerFiringBehavior getBehavior() {
-            return behavior;
-        }
     }
 
     private static final int SIZE = 28;

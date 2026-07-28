@@ -34,7 +34,7 @@ public class Powerup extends Entity {
         return type.getGrantedBehavior();
     }
 
-    /**
+    /*
      * TODO, getMovementBehavior? A way to create powerups that increase speed eg.
      * @return
      *
