@@ -2,12 +2,14 @@ package com.starbox.engine.entities.player;
 
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.Entity;
+import com.starbox.engine.entities.player.firing.FiredShot;
 import com.starbox.engine.entities.player.firing.PlayerFiringBehavior;
 import com.starbox.engine.entities.player.firing.SingleShotFiring;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The player-controlled ship. Just a green square that can move in any
@@ -23,6 +25,10 @@ public class Player extends Entity {
         FiringSlot(PlayerFiringBehavior behavior) {
             this.behavior = behavior;
             this.durationRemaining = behavior.getDurationSeconds();
+        }
+
+        PlayerFiringBehavior getBehavior() {
+            return behavior;
         }
     }
 
@@ -73,20 +79,21 @@ public class Player extends Entity {
     }
 
     /**
-     * Fires all bullets created by firing behaviors not on cooldown.
-     * @return a List of Bullets fired this tick.
+     * Fires all bullets created by all firing behaviors not on cooldown.
+     * @return a List of FiredShots this tick.
      */
-    public List<Bullet> fire() {
+    public List<FiredShot> fire() {
         if (!alive) return List.of();
 
-        List<Bullet> firedBullets = new ArrayList<>();
+        List<FiredShot> shots = new ArrayList<>();
         for (FiringSlot slot : firingSlots) {
             if (slot.cooldownRemaining <= 0) {
-                firedBullets.addAll(slot.behavior.createBullets(this));
+                List<Bullet> bullets = slot.behavior.createBullets(this);
+                shots.add(new FiredShot(slot.behavior.getShotEventType(), bullets));
                 slot.cooldownRemaining = slot.behavior.getCooldownSeconds();
             }
         }
-        return firedBullets;
+        return shots;
     }
 
     public void addFiringBehavior(PlayerFiringBehavior firingBehavior){ firingSlots.add(new FiringSlot(firingBehavior)); }
