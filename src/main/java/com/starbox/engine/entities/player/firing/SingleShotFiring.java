@@ -1,5 +1,6 @@
 package com.starbox.engine.entities.player.firing;
 
+import com.starbox.engine.GameEventType;
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.player.Player;
 
@@ -25,6 +26,9 @@ public class SingleShotFiring implements PlayerFiringBehavior {
 
     @Override
     public double getDurationSeconds() { return durationSeconds; }
+
+    @Override
+    public GameEventType getShotEventType() { return GameEventType.PLAYER_SHOT_SINGLE; }
 
     @Override
     public List<Bullet> createBullets(Player shooter) {

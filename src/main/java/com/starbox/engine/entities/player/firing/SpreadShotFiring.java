@@ -1,5 +1,6 @@
 package com.starbox.engine.entities.player.firing;
 
+import com.starbox.engine.GameEventType;
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.player.Player;
 
@@ -32,13 +33,16 @@ public class SpreadShotFiring implements PlayerFiringBehavior {
     public double getDurationSeconds() { return durationSeconds; }
 
     @Override
+    public GameEventType getShotEventType() { return GameEventType.PLAYER_SHOT_SPREAD; }
+
+    @Override
     public List<Bullet> createBullets(Player shooter){
         double centerX = shooter.getX() + shooter.getWidth() / 2.0;
         double centerY = shooter.getY();
 
         List<Bullet> bullets = new ArrayList<>();
 
-        // 270deg is straight up.
+        // 270 deg is straight up.
         double startAngle = 270 - spreadDegrees / 2.0;
         double step = bulletCount > 1 ? spreadDegrees / (bulletCount - 1) : 0;
 
