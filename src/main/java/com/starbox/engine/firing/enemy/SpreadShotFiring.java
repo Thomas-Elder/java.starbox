@@ -1,5 +1,6 @@
 package com.starbox.engine.firing.enemy;
 
+import com.starbox.engine.GameEventType;
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.enemy.Enemy;
 import com.starbox.engine.entities.player.Player;
@@ -26,6 +27,9 @@ public class SpreadShotFiring implements FiringBehavior {
 
     @Override
     public double getFireIntervalSeconds() { return intervalSeconds; }
+
+    @Override
+    public GameEventType getShotEventType() { return GameEventType.ENEMY_SHOT_SPREAD; }
 
     @Override
     public List<Bullet> createBullets(Enemy shooter, Player player){
