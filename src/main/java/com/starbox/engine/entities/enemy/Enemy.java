@@ -3,6 +3,7 @@ package com.starbox.engine.entities.enemy;
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.Entity;
 import com.starbox.engine.entities.player.Player;
+import com.starbox.engine.firing.FiredShot;
 import com.starbox.engine.firing.enemy.FiringBehavior;
 
 import java.util.ArrayList;
@@ -45,8 +46,6 @@ public class Enemy extends Entity {
 
     // private double shootTimer = 0;
     private double spawnTimer = 0;
-    private final List<Bullet> pendingBullets = new ArrayList<>();
-    private final List<Enemy> pendingSpawns = new ArrayList<>();
     private final List<FiringSlot> firingSlots = new ArrayList<>();
 
     public Enemy(double x, double y, EnemyType type) {
@@ -73,42 +72,31 @@ public class Enemy extends Entity {
         x = baseX + Math.sin(age * wiggleFrequency) * wiggleAmplitude;
     }
 
-    public void updateFiring(double dt, Player player) {
+    public List<FiredShot> fire(double dt, Player player) {
 
-        if (!isAlive()) return;
+        if (!alive) return List.of();
 
+        List<FiredShot> shots = new ArrayList<>();
         for (FiringSlot slot : firingSlots) {
             slot.cooldown -= dt;
             if (slot.cooldown <= 0) {
-                pendingBullets.addAll(slot.behavior.createBullets(this, player));
+                List<Bullet> bullets = slot.behavior.createBullets(this, player);
+                shots.add(new FiredShot(slot.behavior.getShotEventType(), bullets));
                 slot.cooldown = slot.behavior.getFireIntervalSeconds();
             }
         }
+        return shots;
     }
 
-    public void updateSpawning(double dt) {
-        if (!type.canSpawn() || !isAlive()) return;
+    public List<Enemy> spawn(double dt) {
+        if (!type.canSpawn() || !isAlive()) return List.of();
+
         spawnTimer -= dt;
         if (spawnTimer <= 0) {
-            pendingSpawns.addAll(type.getSpawnBehavior().createSpawns(this));
             spawnTimer = type.getSpawnBehavior().getSpawnIntervalSeconds();
+            return type.getSpawnBehavior().createSpawns(this);
         }
-    }
-
-    /** Drains and returns any bullets fired since the last call. */
-    public List<Bullet> collectFiredBullets() {
-        if (pendingBullets.isEmpty()) return List.of();
-        List<Bullet> fired = new ArrayList<>(pendingBullets);
-        pendingBullets.clear();
-        return fired;
-    }
-
-    /** Drains and returns any enemies spawned since the last call. */
-    public List<Enemy> collectSpawnedEnemies() {
-        if (pendingSpawns.isEmpty()) return List.of();
-        List<Enemy> spawned = new ArrayList<>(pendingSpawns);
-        pendingSpawns.clear();
-        return spawned;
+        return List.of();
     }
 
     public boolean damage(int damage) {

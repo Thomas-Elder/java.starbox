@@ -63,10 +63,6 @@ public class GameEngine {
                 level.farStarColor(), level.midStarColor(), level.nearStarColor());
     }
 
-    // ------------------------------------------------------------------
-    // Update
-    // ------------------------------------------------------------------
-
     public void update(double dt, InputHandler input) {
         starfield.update(dt);
 
@@ -121,17 +117,14 @@ public class GameEngine {
         List<Enemy> spawnedByEnemies = new ArrayList<>();
         for (Enemy enemy : enemies) {
             enemy.update(dt);
-            enemy.updateFiring(dt, player);
-            enemy.updateSpawning(dt);
-
-            List<Bullet> firedByEnemy = enemy.collectFiredBullets();
-            if (!firedByEnemy.isEmpty()) {
-                events.add(new GameEvent(GameEventType.ENEMY_SHOT,
-                        enemy.getX() + enemy.getWidth() / 2.0, enemy.getY() + enemy.getHeight()));
+            for (FiredShot shot : enemy.fire(dt, player)) {
+                bullets.addAll(shot.bullets());
+                events.add(new GameEvent(
+                        shot.eventType(),
+                        enemy.getX() + enemy.getWidth() / 2.0,
+                        enemy.getY() + enemy.getHeight()));
             }
-            bullets.addAll(firedByEnemy);
-
-            spawnedByEnemies.addAll(enemy.collectSpawnedEnemies());
+            spawnedByEnemies.addAll(enemy.spawn(dt));
         }
         enemies.addAll(spawnedByEnemies);
 
