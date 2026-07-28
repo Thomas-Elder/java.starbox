@@ -7,6 +7,7 @@ import com.starbox.engine.entities.enemy.Boss;
 import com.starbox.engine.entities.enemy.Enemy;
 import com.starbox.engine.entities.enemy.EnemyType;
 import com.starbox.engine.entities.player.Player;
+import com.starbox.engine.entities.player.firing.FiredShot;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
 import com.starbox.engine.levels.LevelType;
@@ -14,10 +15,7 @@ import com.starbox.engine.levels.Levels;
 import com.starbox.engine.spawn.SpawnEntry;
 import com.starbox.io.InputHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Owns and updates all simulation state: the player, bullets, enemies,
@@ -26,12 +24,18 @@ import java.util.Random;
  */
 public class GameEngine {
 
+    private static final Set<GameEventType> EXPLOSION_TRIGGERS =
+            EnumSet.of(GameEventType.ENEMY_KILLED, GameEventType.PLAYER_KILLED);
+    private static final Set<GameEventType> HIT_TRIGGERS =
+            EnumSet.of(GameEventType.ENEMY_HIT, GameEventType.PLAYER_HIT);
+
     private final LevelManager levelManager = new LevelManager(Levels.campaign());
     private final Player player;
     private final List<Bullet> bullets = new ArrayList<>();
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Explosion> explosions = new ArrayList<>();
     private final List<Powerup> powerups = new ArrayList<>();
+    private final List<GameEvent> events = new ArrayList<>();
     private final Random random = new Random();
 
     private Starfield starfield;
@@ -95,7 +99,10 @@ public class GameEngine {
         player.tickFiringCooldowns(dt);
 
         if (input.isShootPressed()) {
-            bullets.addAll(player.fire());
+            for (FiredShot shot: player.fire()) {
+                bullets.addAll(shot.bullets());
+                events.add(new GameEvent(shot.eventType(), player.getX() + player.getWidth() / 2.0, player.getY()));
+            }
         }
 
         if (level.levelType() == LevelType.BOSS) {
@@ -114,15 +121,30 @@ public class GameEngine {
             enemy.update(dt);
             enemy.updateFiring(dt, player);
             enemy.updateSpawning(dt);
-            bullets.addAll(enemy.collectFiredBullets());
+
+            List<Bullet> firedByEnemy = enemy.collectFiredBullets();
+            if (!firedByEnemy.isEmpty()) {
+                events.add(new GameEvent(GameEventType.ENEMY_SHOT,
+                        enemy.getX() + enemy.getWidth() / 2.0, enemy.getY() + enemy.getHeight()));
+            }
+            bullets.addAll(firedByEnemy);
+
             spawnedByEnemies.addAll(enemy.collectSpawnedEnemies());
         }
         enemies.addAll(spawnedByEnemies);
 
         var collisionResult = CollisionSystem.resolve(player, bullets, enemies);
-
         score += collisionResult.scoreGained();
-        explosions.addAll(collisionResult.explosions());
+
+        for (GameEvent event : collisionResult.events()) {
+            events.add(event);
+            if (EXPLOSION_TRIGGERS.contains(event.type())) {
+                explosions.add(Explosion.centeredAt(event.x(), event.y()));
+            }
+            if (HIT_TRIGGERS.contains(event.type())) {
+                explosions.add(Explosion.centeredAt(event.x(), event.y(), 6));
+            }
+        }
 
         for (Explosion explosion : explosions){
             explosion.update(dt);
@@ -269,6 +291,12 @@ public class GameEngine {
     // ------------------------------------------------------------------
     // Read-only accessors for rendering
     // ------------------------------------------------------------------
+    public List<GameEvent> collectEvents() {
+        if (events.isEmpty()) return List.of();
+        List<GameEvent> drained = new ArrayList<>(events);
+        events.clear();
+        return drained;
+    }
 
     public GameState getState() {
         return state;
