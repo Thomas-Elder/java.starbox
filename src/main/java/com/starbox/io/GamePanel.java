@@ -2,6 +2,7 @@ package com.starbox.io;
 
 import com.starbox.GameConstants;
 import com.starbox.engine.GameEngine;
+import com.starbox.engine.GameEvent;
 import com.starbox.engine.GameLoop;
 
 import java.awt.Canvas;
@@ -21,6 +22,7 @@ public class GamePanel extends Canvas implements GameLoop.Callback {
     private final InputHandler input = new InputHandler();
     private final GameEngine engine = new GameEngine();
     private final GameLoop loop = new GameLoop(this, GameConstants.TARGET_FPS);
+    private final AudioManager audio = new AudioManager();
 
     public GamePanel() {
         setPreferredSize(new Dimension(GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT));
@@ -50,6 +52,10 @@ public class GamePanel extends Canvas implements GameLoop.Callback {
 
     @Override
     public void render() {
+        for (GameEvent event : engine.collectEvents()) {
+            audio.play(event.type());
+        }
+
         BufferStrategy strategy = getBufferStrategy();
         if (strategy == null) {
             return;
