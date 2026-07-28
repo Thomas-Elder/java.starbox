@@ -1,4 +1,4 @@
-package com.starbox.engine.entities.enemy.firing;
+package com.starbox.engine.firing.enemy;
 
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.enemy.Enemy;

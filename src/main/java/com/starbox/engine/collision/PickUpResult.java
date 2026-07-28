@@ -1,6 +1,6 @@
 package com.starbox.engine.collision;
 
-import com.starbox.engine.entities.Powerup;
+import com.starbox.engine.entities.player.Powerup;
 
 import java.util.List;
 

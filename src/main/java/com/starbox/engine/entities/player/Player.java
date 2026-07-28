@@ -2,14 +2,13 @@ package com.starbox.engine.entities.player;
 
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.Entity;
-import com.starbox.engine.entities.player.firing.FiredShot;
-import com.starbox.engine.entities.player.firing.PlayerFiringBehavior;
-import com.starbox.engine.entities.player.firing.SingleShotFiring;
+import com.starbox.engine.firing.FiredShot;
+import com.starbox.engine.firing.player.PlayerFiringBehavior;
+import com.starbox.engine.firing.player.SingleShotFiring;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The player-controlled ship. Just a green square that can move in any

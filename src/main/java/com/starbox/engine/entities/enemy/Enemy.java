@@ -3,7 +3,7 @@ package com.starbox.engine.entities.enemy;
 import com.starbox.engine.entities.Bullet;
 import com.starbox.engine.entities.Entity;
 import com.starbox.engine.entities.player.Player;
-import com.starbox.engine.entities.enemy.firing.FiringBehavior;
+import com.starbox.engine.firing.enemy.FiringBehavior;
 
 import java.util.ArrayList;
 import java.util.List;

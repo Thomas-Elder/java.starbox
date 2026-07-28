@@ -1,9 +1,9 @@
 package com.starbox.engine.entities.enemy;
 
-import com.starbox.engine.entities.enemy.firing.AimedShotFiring;
-import com.starbox.engine.entities.enemy.firing.FiringBehavior;
-import com.starbox.engine.entities.enemy.firing.SpreadShotFiring;
-import com.starbox.engine.entities.enemy.firing.StraightShotFiring;
+import com.starbox.engine.firing.enemy.AimedShotFiring;
+import com.starbox.engine.firing.enemy.FiringBehavior;
+import com.starbox.engine.firing.enemy.SpreadShotFiring;
+import com.starbox.engine.firing.enemy.StraightShotFiring;
 import com.starbox.engine.spawn.FighterSpawnBehavior;
 import com.starbox.engine.spawn.SpawnBehavior;
 

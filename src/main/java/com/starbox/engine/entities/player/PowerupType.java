@@ -1,9 +1,9 @@
-package com.starbox.engine.entities;
+package com.starbox.engine.entities.player;
 
-import com.starbox.engine.entities.player.firing.MultiShotFiring;
-import com.starbox.engine.entities.player.firing.SingleShotFiring;
-import com.starbox.engine.entities.player.firing.SpreadShotFiring;
-import com.starbox.engine.entities.player.firing.PlayerFiringBehavior;
+import com.starbox.engine.firing.player.MultiShotFiring;
+import com.starbox.engine.firing.player.SingleShotFiring;
+import com.starbox.engine.firing.player.SpreadShotFiring;
+import com.starbox.engine.firing.player.PlayerFiringBehavior;
 
 import java.awt.*;
 

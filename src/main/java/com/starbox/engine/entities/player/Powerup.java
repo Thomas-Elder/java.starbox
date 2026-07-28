@@ -1,6 +1,7 @@
-package com.starbox.engine.entities;
+package com.starbox.engine.entities.player;
 
-import com.starbox.engine.entities.player.firing.PlayerFiringBehavior;
+import com.starbox.engine.entities.Entity;
+import com.starbox.engine.firing.player.PlayerFiringBehavior;
 
 public class Powerup extends Entity {
 

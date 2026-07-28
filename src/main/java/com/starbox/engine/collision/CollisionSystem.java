@@ -5,6 +5,7 @@ import com.starbox.engine.GameEventType;
 import com.starbox.engine.entities.*;
 import com.starbox.engine.entities.enemy.Enemy;
 import com.starbox.engine.entities.player.Player;
+import com.starbox.engine.entities.player.Powerup;
 
 import java.util.ArrayList;
 import java.util.List;

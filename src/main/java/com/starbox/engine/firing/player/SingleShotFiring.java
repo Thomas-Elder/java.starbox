@@ -1,4 +1,4 @@
-package com.starbox.engine.entities.player.firing;
+package com.starbox.engine.firing.player;
 
 import com.starbox.engine.GameEventType;
 import com.starbox.engine.entities.Bullet;

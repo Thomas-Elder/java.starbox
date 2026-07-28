@@ -5,6 +5,7 @@ import com.starbox.engine.GameEngine;
 import com.starbox.engine.entities.*;
 import com.starbox.engine.entities.enemy.Boss;
 import com.starbox.engine.entities.enemy.Enemy;
+import com.starbox.engine.entities.player.Powerup;
 import com.starbox.engine.levels.Level;
 import com.starbox.engine.levels.LevelManager;
 import com.starbox.engine.levels.LevelType;

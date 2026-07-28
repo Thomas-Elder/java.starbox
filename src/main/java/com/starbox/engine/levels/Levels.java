@@ -1,6 +1,6 @@
 package com.starbox.engine.levels;
 
-import com.starbox.engine.entities.PowerupType;
+import com.starbox.engine.entities.player.PowerupType;
 import com.starbox.engine.spawn.SpawnSchedule;
 import com.starbox.engine.entities.enemy.EnemyType;
 
